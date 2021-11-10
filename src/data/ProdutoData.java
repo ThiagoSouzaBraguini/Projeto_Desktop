@@ -34,4 +34,34 @@ public class ProdutoData extends Conexao{
         }
         return null;
     }
+    
+        public boolean editar(Produto obj)throws Exception{
+        String sql ="Update produto set nome_produto=?, preco_produto=?"
+                + " where codigo_produto=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setString(1,obj.getNome());
+        ps.setDouble(2,obj.getPreco());
+        ps.setInt(3, obj.getCodigo());
+        return ps.executeUpdate()>0;
+    }
+        
+        public boolean excluir(int codigo)throws Exception{
+        String sql ="Delete from produto where codigo_produto=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setInt(1,codigo);
+        return ps.executeUpdate()>0;
+    }
+    
+        public ArrayList<Produto> pesquisar (String pesq)throws Exception{
+        ArrayList<Produto> lista = new ArrayList<>();
+        String sql="select * from produto where nome_produto like '"+pesq+"%'";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            Produto obj =  new Produto(rs.getDouble("preco_produto"),rs.getInt("codigo_produto"),rs.getString("nome_produto"));
+            lista.add(obj);
+        }
+        return lista;
+    }
+    
 }

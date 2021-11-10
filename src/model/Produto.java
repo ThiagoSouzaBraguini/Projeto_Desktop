@@ -41,7 +41,7 @@ public class Produto {
     private String nome;
     
     
-    public Produto(int preco, int codigo, String nome) {
+    public Produto(double preco, int codigo, String nome) {
         this.preco = preco;
         this.codigo = codigo;
         this.nome = nome;

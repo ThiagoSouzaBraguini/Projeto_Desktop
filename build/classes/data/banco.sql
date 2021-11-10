@@ -1,2 +1,2 @@
-SELECT *  from pessoa;
+SELECT *  from funcionario;
 

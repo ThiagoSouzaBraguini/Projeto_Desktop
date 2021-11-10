@@ -3,6 +3,7 @@ package data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import model.Cliente;
 import model.Funcionario;
 
@@ -40,10 +41,29 @@ public class ClienteData extends Conexao{
                 
             }
         }   
-        return false;*/
-        
-        
-        
+        return false;*/  
+    }
+    
+    public boolean editar(Cliente obj)throws Exception{
+        String sql ="Update pessoa set nome_pessoa=?,email_pessoa=?"
+                + " where codigo_pessoa=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setString(1,obj.getNome());
+        ps.setString(2,obj.getEmail());
+        ps.setInt(3, obj.getCodigo());
+        return ps.executeUpdate()>0;
+    }   
+    
+    public ArrayList<Cliente> pesquisar (String pesq)throws Exception{
+        ArrayList<Cliente> lista = new ArrayList<>();
+        String sql="select * from pessoa where nome_pessoa like '"+pesq+"%'";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            Cliente obj =  new Cliente(rs.getInt("codigo_pessoa"),rs.getString("nome_pessoa"),rs.getString("email_pessoa"));
+            lista.add(obj);
+        }
+        return lista;
     }
     
     public Cliente pesquisaCli(int codigo)throws Exception{
@@ -56,4 +76,13 @@ public class ClienteData extends Conexao{
         }
         return null;
     }
+    
+        public boolean excluir(int codigo)throws Exception{
+        String sql ="Delete from pessoa where codigo_pessoa=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setInt(1,codigo);
+        return ps.executeUpdate()>0;
+    }
 }
+
+

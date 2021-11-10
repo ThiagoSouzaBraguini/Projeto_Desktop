@@ -5,10 +5,38 @@ package model;
  *
  * @author Thiago
  */
-public class Funcionario extends Cliente{
+public class Funcionario{
     
+    private int codigo;
     private String usuario;
     private String senha;
+    private String nome;
+    private String email;
+
+    public Funcionario(int codigo,String usuario, String senha,String nome, String email) {
+        this.codigo = codigo;
+        this.usuario = usuario;
+        this.senha = senha;
+        this.nome = nome;
+        this.email = email;
+    }
+
+    public Funcionario() {
+        codigo = 0;
+        usuario = new String();
+        senha = new String();
+        nome = new String();
+        email = new String();
+    }
+
+    
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
 
     public String getUsuario() {
         return usuario;
@@ -26,21 +54,20 @@ public class Funcionario extends Cliente{
         this.senha = senha;
     }
 
-    public Funcionario(String usuario, String senha) {
-        this.usuario = usuario;
-        this.senha = senha;
+
+    public String getNome() {
+        return nome;
     }
 
-    public Funcionario(String usuario, String senha, int codigo, String nome, String email) {
-        super(codigo, nome, email);
-        this.usuario = usuario;
-        this.senha = senha;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public Funcionario() {
-        usuario = new String();
-        senha = new String();
+    public String getEmail() {
+        return email;
     }
-    
-   
+
+    public void setEmail(String email) {
+        this.email = email;
+    }  
 }

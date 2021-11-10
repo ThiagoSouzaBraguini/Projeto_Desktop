@@ -5,11 +5,14 @@
  */
 package view;
 
+import Extras.TratarFormularios;
 import javax.swing.JOptionPane;
 import model.Produto;
 import data.ProdutoData;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author Thiago
@@ -17,6 +20,8 @@ import java.util.logging.Logger;
 public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
     private Produto obj;
     private ProdutoData DAO;
+    private int acao;
+    private ArrayList<Produto> listaDeUsuarios;
     /**
      * Creates new form JIFCadastro_Produto
      */
@@ -24,6 +29,8 @@ public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
         try{
         obj = new Produto();
         DAO = new ProdutoData();
+        listaDeUsuarios = new ArrayList<>();
+        acao = 0;
     initComponents();
     }catch(Exception erro){
     JOptionPane.showMessageDialog(null, erro.getMessage());
@@ -43,11 +50,24 @@ public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
         jlCodigo = new javax.swing.JLabel();
         jlNome = new javax.swing.JLabel();
         jlPreco = new javax.swing.JLabel();
+        jlPesquisar = new javax.swing.JLabel();
+        jlIconPesquisar = new javax.swing.JLabel();
         jtfCodigo = new javax.swing.JTextField();
         jtfNome = new javax.swing.JTextField();
         jtfPreco = new javax.swing.JTextField();
+        jtfPesquisar = new javax.swing.JTextField();
         jbSalvar = new javax.swing.JButton();
         jbSair = new javax.swing.JButton();
+        jbNovo = new javax.swing.JButton();
+        jbEditar = new javax.swing.JButton();
+        jbLimpar = new javax.swing.JButton();
+        jbExcluir = new javax.swing.JButton();
+        jbCancelar = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtbDados = new javax.swing.JTable();
+
+        setPreferredSize(new java.awt.Dimension(900, 750));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jlTitulo.setFont(new java.awt.Font("SimSun", 1, 24)); // NOI18N
         jlTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -55,91 +75,147 @@ public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
         jlTitulo.setText("CADASTRO DE PRODUTO");
         jlTitulo.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jlTitulo.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        getContentPane().add(jlTitulo, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 269, -1));
 
         jlCodigo.setFont(new java.awt.Font("SimSun", 1, 22)); // NOI18N
         jlCodigo.setText("Código");
+        getContentPane().add(jlCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 150, -1, -1));
 
         jlNome.setFont(new java.awt.Font("SimSun", 1, 22)); // NOI18N
         jlNome.setText("Nome");
+        getContentPane().add(jlNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 180, -1, -1));
 
         jlPreco.setFont(new java.awt.Font("SimSun", 1, 22)); // NOI18N
         jlPreco.setText("Preço");
+        getContentPane().add(jlPreco, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 210, -1, -1));
+
+        jlPesquisar.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jlPesquisar.setText("PESQUISAR");
+        getContentPane().add(jlPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(193, 472, 123, -1));
+
+        jlIconPesquisar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/lupas .png"))); // NOI18N
+        getContentPane().add(jlIconPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 472, -1, 33));
 
         jtfCodigo.setToolTipText("Digite o código do produto");
+        jtfCodigo.setEnabled(false);
+        getContentPane().add(jtfCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(445, 150, 120, -1));
 
         jtfNome.setToolTipText("Digite o nome do produto");
+        jtfNome.setEnabled(false);
+        getContentPane().add(jtfNome, new org.netbeans.lib.awtextra.AbsoluteConstraints(445, 180, 120, -1));
 
         jtfPreco.setToolTipText("Digite o preço do produto");
+        jtfPreco.setEnabled(false);
+        getContentPane().add(jtfPreco, new org.netbeans.lib.awtextra.AbsoluteConstraints(445, 210, 120, -1));
+
+        jtfPesquisar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jtfPesquisarKeyReleased(evt);
+            }
+        });
+        getContentPane().add(jtfPesquisar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 470, 150, -1));
 
         jbSalvar.setFont(new java.awt.Font("SimSun", 1, 22)); // NOI18N
-        jbSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/salvar.png"))); // NOI18N
+        jbSalvar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/salve-.png"))); // NOI18N
         jbSalvar.setText("SALVAR");
+        jbSalvar.setEnabled(false);
         jbSalvar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbSalvarActionPerformed(evt);
             }
         });
+        getContentPane().add(jbSalvar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 351, -1, -1));
 
         jbSair.setFont(new java.awt.Font("SimSun", 1, 22)); // NOI18N
-        jbSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/sair.png"))); // NOI18N
+        jbSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/sair (1).png"))); // NOI18N
         jbSair.setText("SAIR");
         jbSair.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jbSairActionPerformed(evt);
             }
         });
+        getContentPane().add(jbSair, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 550, -1, -1));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(182, 182, 182)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jtfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jlTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtfPreco, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jtfNome, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(154, 154, 154)
-                                .addComponent(jbSair))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(132, 132, 132)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jlNome)
-                            .addComponent(jlCodigo)
-                            .addComponent(jlPreco)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addComponent(jbSalvar)))
-                .addContainerGap(158, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jlTitulo)
-                .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jlCodigo)
-                    .addComponent(jtfCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jlNome)
-                    .addComponent(jtfNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jtfPreco, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jlPreco))
-                .addGap(61, 61, 61)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jbSalvar)
-                    .addComponent(jbSair))
-                .addContainerGap(103, Short.MAX_VALUE))
-        );
+        jbNovo.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jbNovo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/novo-arquivo.png"))); // NOI18N
+        jbNovo.setText("NOVO");
+        jbNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbNovoActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbNovo, new org.netbeans.lib.awtextra.AbsoluteConstraints(178, 267, 189, -1));
+
+        jbEditar.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jbEditar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/editar.png"))); // NOI18N
+        jbEditar.setText("EDITAR");
+        jbEditar.setEnabled(false);
+        jbEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbEditarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbEditar, new org.netbeans.lib.awtextra.AbsoluteConstraints(373, 267, 175, -1));
+
+        jbLimpar.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jbLimpar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/apagador.png"))); // NOI18N
+        jbLimpar.setText("LIMPAR");
+        jbLimpar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbLimparActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbLimpar, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 267, 173, -1));
+
+        jbExcluir.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jbExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/excluir.png"))); // NOI18N
+        jbExcluir.setText("EXCLUIR");
+        jbExcluir.setEnabled(false);
+        jbExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbExcluirActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbExcluir, new org.netbeans.lib.awtextra.AbsoluteConstraints(373, 351, -1, -1));
+
+        jbCancelar.setFont(new java.awt.Font("SimSun", 1, 20)); // NOI18N
+        jbCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icones/cancelar.png"))); // NOI18N
+        jbCancelar.setText("CANCELAR");
+        jbCancelar.setEnabled(false);
+        jbCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbCancelarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jbCancelar, new org.netbeans.lib.awtextra.AbsoluteConstraints(178, 351, -1, -1));
+
+        jtbDados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Código", "Nome", "Email"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jtbDados.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jtbDadosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jtbDados);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(193, 523, -1, 129));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -149,26 +225,128 @@ public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jbSairActionPerformed
 
     private void jbSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbSalvarActionPerformed
-        try{
-            if(validarCampos()){
+        if(validarCampos()){
+            try {
                 if(preencherObjeto()){
-                
-                    if(DAO.incluir(obj)){
-                        JOptionPane.showMessageDialog(this, "SALVO COM SUCESSO", "MEU SISTEMA", JOptionPane.INFORMATION_MESSAGE);
-                        jtfCodigo.setText("");
-                        jtfNome.setText("");
-                        jtfPreco.setText("");
+                    
+                    if(acao==1){
+                        if(DAO.incluir(obj)){
+                            JOptionPane.showMessageDialog(this,"Salvo com sucesso", "Acesso ao sistema!", JOptionPane.INFORMATION_MESSAGE);
+                            jbCancelarActionPerformed(evt);
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Não Salvou");
+                        }
                     }
-                    else{
-                        JOptionPane.showMessageDialog(this, "NÃO SALVOU", "MEU SISTEMA", JOptionPane.ERROR_MESSAGE);
-                    }
+                    if(acao==2){
+                        if(DAO.editar(obj)){
+                            JOptionPane.showMessageDialog(this,"Atualizado com sucesso com sucesso", "Acesso ao sistema!", JOptionPane.INFORMATION_MESSAGE);
+                            jbCancelarActionPerformed(evt);
+                        }else{
+                            JOptionPane.showMessageDialog(this, "Não Atualizou");
+                        }
+                    }                            
                 }
+            } catch (Exception ex) {
+                Logger.getLogger(JIFCadastro_Funcionario.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        catch (Exception e) {
-               JOptionPane.showMessageDialog(this, "Erro no sistema" + e.getMessage());
-        }
     }//GEN-LAST:event_jbSalvarActionPerformed
+
+    private void jbNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbNovoActionPerformed
+        jbNovo.setEnabled(false);
+        jbLimpar.setEnabled(true);
+        jbSalvar.setEnabled(true);
+        jbCancelar.setEnabled(true);
+        jbEditar.setEnabled(false);
+        jbExcluir.setEnabled(false);
+        jtfCodigo.setEnabled(true);
+        jtfNome.setEnabled(true);
+        jtfPreco.setEnabled(true);
+        jtfPesquisar.setEnabled(true);
+        jtbDados.setEnabled(false);
+        acao=1;
+    }//GEN-LAST:event_jbNovoActionPerformed
+
+    private void jbEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbEditarActionPerformed
+       try {
+            TratarFormularios.habilitarCampos(this);
+        } catch (Exception ex) {
+            Logger.getLogger(JIFCadastro_Funcionario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       acao = 2;
+       jtfCodigo.setEnabled(false);
+       jbNovo.setEnabled(false);
+       jbEditar.setEnabled(false);
+       jbExcluir.setEnabled(false);
+       jbSalvar.setEnabled(true);
+       jbCancelar.setEnabled(true);
+    }//GEN-LAST:event_jbEditarActionPerformed
+
+    private void jbLimparActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbLimparActionPerformed
+       try {
+            Extras.TratarFormularios.limparCampos(this);
+        } catch (Exception ex) {
+            Logger.getLogger(JIFCadastro_Funcionario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jbLimparActionPerformed
+
+    private void jbCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbCancelarActionPerformed
+        jbNovo.setEnabled(true);
+        jbSalvar.setEnabled(false);
+        jbCancelar.setEnabled(false);
+        jbEditar.setEnabled(false);
+        jbExcluir.setEnabled(false);
+        jtfCodigo.setEnabled(false);
+        jtfNome.setEnabled(false);
+        jtfPesquisar.setEnabled(true);
+        jtbDados.setEnabled(true);
+        jtfCodigo.setText("");
+        jtfNome.setText("");
+        jtfPreco.setText("");
+        jtfPesquisar.setText("");
+    }//GEN-LAST:event_jbCancelarActionPerformed
+
+    private void jbExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbExcluirActionPerformed
+        try {
+            if(DAO.excluir(Integer.parseInt(jtfCodigo.getText())));
+            JOptionPane.showMessageDialog(this, "EXCLUIDO COM SUCESSO");
+            TratarFormularios.limparCampos(this);
+            jbExcluir.setEnabled(false);
+            jbEditar.setEnabled(false);
+        } catch (Exception e) {
+        }
+    }//GEN-LAST:event_jbExcluirActionPerformed
+
+    private void jtfPesquisarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jtfPesquisarKeyReleased
+         try {
+    DefaultTableModel mp = (DefaultTableModel) jtbDados.getModel();
+    mp.setNumRows(0);
+    if(jtfPesquisar.getText().length()>1){
+    listaDeUsuarios=DAO.pesquisar(jtfPesquisar.getText());
+    for(Produto u : listaDeUsuarios){
+    mp.addRow(new String[]{""+u.getCodigo(),""+u.getNome(),""+u.getPreco()});
+    }
+    }
+    } catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Erro:"+e.getMessage(),"Erro ao pesquisar",JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_jtfPesquisarKeyReleased
+
+    private void jtbDadosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jtbDadosMouseClicked
+        try{
+           int linhaSelecionada = jtbDados.getSelectedRow();
+           if(linhaSelecionada>-1){
+               jtfCodigo.setText(""+listaDeUsuarios.get(linhaSelecionada).getCodigo());
+               jtfNome.setText(listaDeUsuarios.get(linhaSelecionada).getNome());
+               jtfPreco.setText(""+listaDeUsuarios.get(linhaSelecionada).getPreco());
+               jbEditar.setEnabled(true);
+               jbExcluir.setEnabled(true);
+           }
+       }
+       catch(Exception e){
+           JOptionPane.showMessageDialog(this,"Erro" + e.getMessage(),"Erro ao pesquisar" , JOptionPane.ERROR_MESSAGE);
+       }
+    }//GEN-LAST:event_jtbDadosMouseClicked
 
     private boolean validarCampos(){
         String msg="";
@@ -204,14 +382,24 @@ public class JIFCadastro_Produto extends javax.swing.JInternalFrame {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton jbCancelar;
+    private javax.swing.JButton jbEditar;
+    private javax.swing.JButton jbExcluir;
+    private javax.swing.JButton jbLimpar;
+    private javax.swing.JButton jbNovo;
     private javax.swing.JButton jbSair;
     private javax.swing.JButton jbSalvar;
     private javax.swing.JLabel jlCodigo;
+    private javax.swing.JLabel jlIconPesquisar;
     private javax.swing.JLabel jlNome;
+    private javax.swing.JLabel jlPesquisar;
     private javax.swing.JLabel jlPreco;
     private javax.swing.JLabel jlTitulo;
+    private javax.swing.JTable jtbDados;
     private javax.swing.JTextField jtfCodigo;
     private javax.swing.JTextField jtfNome;
+    private javax.swing.JTextField jtfPesquisar;
     private javax.swing.JTextField jtfPreco;
     // End of variables declaration//GEN-END:variables
 

@@ -17,7 +17,7 @@ public class Conexao {
     
     public Conexao()throws SQLException, ClassNotFoundException{
         String url="jdbc:mysql://localhost:3306/projetolp1?zeroDateTimeBehavior=convertToNull";
-        String driver="com.mysql.jdbc.Driver";
+        String driver="com.mysql.cj.jdbc.Driver";
         Class.forName(driver);
         con = DriverManager.getConnection(url,"root","Thiago123");
     }

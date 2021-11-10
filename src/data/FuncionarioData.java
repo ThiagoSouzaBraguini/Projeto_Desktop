@@ -42,4 +42,36 @@ public class FuncionarioData extends Conexao{
         }
         else return null;
     }
+    
+    public boolean editar(Funcionario obj)throws Exception{
+        String sql ="Update funcionario set nome_funcionario=?,email_funcionario=?,usuario_funcionario=?,senha_funcionario=?"
+                + " where codigo_funcionario=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setString(1,obj.getNome());
+        ps.setString(2,obj.getEmail());
+        ps.setString(3,obj.getUsuario());
+        ps.setString(4,obj.getSenha());
+        ps.setInt(5, obj.getCodigo());
+        return ps.executeUpdate()>0;
+    }
+    
+    public boolean excluir(int codigo)throws Exception{
+        String sql ="Delete from funcionario where codigo_funcionario=?";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ps.setInt(1,codigo);
+        return ps.executeUpdate()>0;
+    }
+    
+    public ArrayList<Funcionario> pesquisar (String pesq)throws Exception{
+        ArrayList<Funcionario> lista = new ArrayList<>();
+        String sql="select * from funcionario where nome_funcionario like '"+pesq+"%'";
+        PreparedStatement ps = getConexao().prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+        while(rs.next()){
+            Funcionario obj =  new Funcionario(rs.getInt("codigo_funcionario"),rs.getString("nome_funcionario"),rs.getString("email_funcionario"),
+                    rs.getString("usuario_funcionario"),rs.getString("senha_funcionario"));
+            lista.add(obj);
+        }
+        return lista;
+    }
 }
